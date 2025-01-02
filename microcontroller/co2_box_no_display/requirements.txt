@@ -1,0 +1,4 @@
+libraries needed:
+- Adafruit BME280 Library by Adafruit (version 2.2.2)
+- Adafruit SCD30 by Adafruit (version 1.0.9)
+- Adafruit Unified Sensor by Adafruit (version 1.1.6 or above)
