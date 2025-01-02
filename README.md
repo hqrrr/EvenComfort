@@ -6,11 +6,7 @@ Experimental script to display indoor environmental quality sensor data on Even 
 
 1. Configure the microcontroller (serial port / baud rate / number of sensor)
 
-    - You can find the demo Arduino code and the quick build guides here: 
-    
-        - [with 4.2inch E-Ink display](/microcontroller/co2_box_epaper_vertical)
-
-        - [without display](/microcontroller/co2_box_no_display)
+    - You can find the demo Arduino code and the quick build guides [here](/microcontroller) 
 
 2. run `even_g1.py`
 
