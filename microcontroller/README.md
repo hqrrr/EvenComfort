@@ -16,7 +16,7 @@ Here are some simple prototypes I have previously built for monitoring Indoor En
 
 ### Wiring
 
-1. Connect BME280 to the microcontroller e.g. using jumper wires:
+1. Connect BME280 to the microcontroller e.g. using jumper wires & breadboard:
     
     - VIN - 5V
 
