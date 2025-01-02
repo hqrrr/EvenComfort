@@ -1,12 +1,16 @@
 # EvenComfort
 
-Experimental script to display indoor environmental quality sensor data on Even Realities G1 glasses.
+Experimental script to display Indoor Environmental Quality sensor data on Even Realities G1 glasses.
 
 ## Usage
 
-1. Configure the microcontroller (serial port / baud rate / number of sensor)
+1. Configure the microcontroller (serial port / baud rate / number of sensor) in `even_g1.py`
 
-    - You can find the demo Arduino code and the quick build guides [here](/microcontroller) 
+    - You can find the demo Arduino code and the quick build guides here: 
+    
+        - [with 4.2inch E-Ink display](/microcontroller/co2_box_epaper_vertical)
+
+        - [without display](/microcontroller/co2_box_no_display)
 
 2. run `even_g1.py`
 
@@ -14,11 +18,11 @@ Experimental script to display indoor environmental quality sensor data on Even 
 
 - Connect microcontroller via serial port
 
-- Send sensor data to even-realities g1 smart glasses
+- TODO: Send sensor data to even-realities g1 smart glasses
 
-    - supports Bosch BME280 for air temperature, relative humidity, air pressure
+    - Supports Bosch BME280 for air temperature, relative humidity, air pressure
 
-    - supports Sensirion SCD30 for CO2 concentration in ppm (it also has temperature and humidity data, but not recommended due to accuracy)
+    - Supports Sensirion SCD30 for CO2 concentration in ppm (it also has temperature and humidity data, but not recommended due to accuracy)
 
 - TODO: Add evaluation of thermal comfort, indoor air quality
 
@@ -32,7 +36,7 @@ If you only copy my part, you can consider it as MIT license.
 
 ## Expand the G1 open source ecosystem!
 
-Technically, the microcontroller ESP32 I use also supports BLE connection, which can send sensor data directly to the glasses without needing a computer to run the script. But since my sensors will not be moved on my desk next to my laptop, I have not implemented this yet (too lazy :D).
+Technically, the microcontroller ESP32 I use also supports BLE connection, which can send sensor data directly to the glasses without needing a computer to run the script. But since my monitoring device on my desk is next to my laptop and will not be moved, I have not implemented this yet (too lazy :D).
 
 Feel free to copy my code into your applications! Further development plans are to support some other devices I previously developed about Indoor Environmental Quality (they have more types of sensors, such as noise, light, VOC, etc.).
 
@@ -50,6 +54,6 @@ If you have other ideas, feel free to submit an issue labelled `enhancement`.
 
 - [@emingenc: g1_flutter_blue_plus](https://github.com/emingenc/g1_flutter_blue_plus): Another repo from @emingenc for Dart implementation.
 
-- [@NyasakiAT: G1-Navigate](https://github.com/NyasakiAT/G1-Navigate): "Further development of the Dart implementation and BMP composing code" -- @meyskens (I have no idea about Dart...)
+- [@NyasakiAT: G1-Navigate](https://github.com/NyasakiAT/G1-Navigate): Further development of the Dart implementation and BMP composing code
 
-If I find another repo, I will add it to this list. If you have a cool application, feel free to submit an issue labelled `enhancement`, or better yet, post it directly to the [Even Realities official Discord group](https://github.com/even-realities).
+If I find another repo, I will add it to this list. If you have a cool application, feel free to submit an issue labelled `enhancement`, or better yet, post it directly to the Even Realities official Discord group.
