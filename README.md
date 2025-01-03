@@ -26,8 +26,6 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
     - Thermal comfort evaluation based on Fanger's PMV/PPD model (ISO 7730) & adaptive model (EN 16798-1:2019)
 
-    Notes: If you are curious about the principles behind these models, I have previously written an wiki article about the basis of IEQ, which you can read [here](https://rw.e3d.rwth-aachen.de/en/wiki/about-the-basis-of-ieq-2/) (I know it may be a bit long).
-
 - TODO: Add evaluation of indoor air quality
 
 - TODO: Add daily clothing suggestions based on thermal comfort model
@@ -38,6 +36,8 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 ![Workflow.png](./pics/Workflow.png)
 
 You can use other data sources such as smart home systems and modify the `get_data` method in `serial_reader`. Just convert the data format to match the example given in the comments.
+
+If you are curious about the principles behind these models, I have previously written an wiki article about the basis of IEQ, which you can read [here](https://rw.e3d.rwth-aachen.de/en/wiki/about-the-basis-of-ieq-2/) (I know it may be a bit long).
 
 ## License
 
