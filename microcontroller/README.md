@@ -4,6 +4,8 @@ Here are some simple prototypes I have previously built for monitoring Indoor En
 
 ## CO2 box with E-Ink display (vertical)
 
+-> [co2_box_epaper_vertical](/co2_box_epaper_vertical)
+
 - Microcontroller: Espressif ESP-32 DevKitC (WROOM-32D/E) (10~15€)
 
 - Sensors:
@@ -73,6 +75,8 @@ If you have a reference device for calibration, you could apply [One Point Offse
 - line 40: `float scd30_co2_adjt = 0;` for CO2 (SCD30), actually you don't need to calibrate the CO2 since the SCD30 is in ASC (automatic self-calibration) mode, more details please see: [Field calibration for SCD30](https://sensirion.com/media/documents/33C09C07/620638B8/Sensirion_SCD30_Field_Calibration.pdf).
 
 ## CO2 box without display
+
+-> [co2_box_no_display](/co2_box_no_display)
 
 - Microcontroller: Espressif ESP-32 DevKitC (WROOM-32D/E) (10~15€)
 
