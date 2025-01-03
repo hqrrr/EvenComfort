@@ -1,13 +1,14 @@
 from serial_reader import microcontroller
+from thermal_comfort import thermal_comfort_pmvppd, thermal_comfort_adaptive
 import asyncio
 import logging
 from even_glasses.bluetooth_manager import GlassesManager
 from even_glasses.commands import send_text
 
-
+# Hardware configuration
 serial_port = "COM11"
 baud_rate = 115200
-number_of_sensor = 2
+sensors = ["BEM280", "SCD30"]
 
 
 logging.basicConfig(level=logging.INFO)
@@ -25,7 +26,7 @@ async def main():
         mc = microcontroller(
             serial_port=serial_port,
             baud_rate=baud_rate,
-            number_of_sensor=number_of_sensor,
+            sensors=sensors,
         )
         try:
             while True:
@@ -46,10 +47,43 @@ async def main():
                             CO2 = sensor_data["Data"][i]["Value"]["CO2"]
                             logger.info(f"CO2: {CO2} ppm")
 
-                # TODO: send sensor data to even g1
-                # await send_text(manager=manager, text_message="Hello World!")
+                        else:
+                            logger.error("Expected sensor not found in unpacked data")
+                            # some dummy data
+                            temperature = 22
+                            humidity = 50
+                            pressure = 1000
+                            CO2 = 400
 
-                # TODO: add thermal comfort evaluation
+                    # 1) thermal comfort (Fanger's PMV/PPD model)
+                    pmvppd = thermal_comfort_pmvppd(tdb=temperature, rh=50)
+                    ## Predicted Mean Vote from –3 to +3 corresponding to the categories: cold, cool, slightly cool, neutral, slightly warm, warm, and hot.
+                    pmv = pmvppd["pmv"]
+                    logger.info(f"PMV: {pmv} [-3 ~ +3]")
+                    ## Predicted Percentage of Dissatisfied (PPD) occupants in %
+                    ppd = pmvppd["ppd"]
+                    logger.info(f"PMV: {ppd} [%]")
+                    ## Predicted clothing insulation value in clo
+                    clo_predicted = pmvppd["clo"]
+                    logger.info(f"Predicted clothing: {clo_predicted} [clo]")
+
+                    # 2) thermal comfort (adaptive model)
+                    adaptive_results = thermal_comfort_adaptive(tdb=temperature)
+
+
+                    # TODO: Translate the clo value into common and understandable clothing combinations.
+
+                    # TODO: IAQ
+
+                    # TODO: Add support for other IEQ domains like noise, lighting, VOC etc.
+
+                    # TODO: send sensor data to even g1
+                    # await send_text(manager=manager, text_message="Hello World!")
+
+                else:
+                    logger.error("No sensor data!")
+                    await send_text(manager=manager, text_message="No sensor data!")
+
 
         except KeyboardInterrupt:
             logger.info("Interrupted by user.")

@@ -22,7 +22,11 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
 - TODO: Add evaluation of thermal comfort, indoor air quality
 
-- TODO: Add support for [Ressourcenwächter](https://rw.e3d.rwth-aachen.de/en/homepage-en/)
+## How it works
+
+![Workflow.png](./pics/Workflow.png)
+
+You can use other data sources such as smart home systems and modify the `get_data` method in `serial_reader`. Just convert the data format to match the example given in the comments.
 
 ## License
 

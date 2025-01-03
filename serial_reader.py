@@ -11,15 +11,24 @@ logger = logging.getLogger(__name__)
 
 
 class microcontroller():
-    def __init__(self, serial_port: str, baud_rate: int, number_of_sensor: int, filename: str = "test", save: bool = False):
+    def __init__(self, serial_port: str, baud_rate: int, sensors: list, filename: str = "test", save: bool = False):
+        """
+        Example:
+        mc = microcontroller(
+            serial_port=serial_port,
+            baud_rate=baud_rate,
+            sensors=["BME280", "SCD30"],
+        )
+        """
         self.mc = serial.Serial(serial_port, baud_rate, timeout=1)
-        self.number_of_sensor = number_of_sensor
+        self.sensors = sensors
         self.filename = filename
         self.save = save
 
     def get_data(self):
         """
-        read data from serial port in json format / save data as csv (optional, if save is True)
+        Read data from serial port in JSON format, return dict.
+        Save data as csv (optional, if save is True)
         -------------------------
         data structure example:
             {
@@ -68,7 +77,7 @@ class microcontroller():
             now = datetime.now()
             new_row = [now]
 
-            for i in range(0, self.number_of_sensor):
+            for i in range(0, len(self.sensors)):
                 if value_read_dict["Data"][i]["Sensor"] == "BME280":
                     new_row.append(value_read_dict["Data"][i]["Sensor"])
                     new_row.append(value_read_dict["Data"][i]["Value"]["Temperature"])
@@ -79,6 +88,7 @@ class microcontroller():
                     new_row.append(value_read_dict["Data"][i]["Value"]["Temperature"])
                     new_row.append(value_read_dict["Data"][i]["Value"]["Humidity"])
                     new_row.append(value_read_dict["Data"][i]["Value"]["CO2"])
+                # TODO: supports other sensors like SCD40, VEML7700, SGP40...
                 else:
                     raise Exception("Sensor type unknow!")
 
