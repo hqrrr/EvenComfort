@@ -22,6 +22,8 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
     - Supports Sensirion SCD30 for CO2 concentration in ppm (it also has temperature and humidity data, but not recommended due to accuracy)
 
+- Thermal comfort evaluation based on Fanger's PMV/PPD model (ISO 7730) & adaptive model (EN 16798-1:2019)
+
 - TODO: Add evaluation of indoor air quality
 
 - TODO: Add daily clothing suggestions based on thermal comfort model
