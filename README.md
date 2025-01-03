@@ -8,19 +8,24 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
     - You can find the demo Arduino code and the quick build guides [here](/microcontroller): 
 
-2. run `even_g1.py`
+2. Configure `latitude`, `longitude` and `timezone` in `get_weather.py`
+
+3. Run `even_g1.py`
 
 ## Features
 
 - Connect microcontroller via serial port
 
-- TODO: Send sensor data to even-realities g1 smart glasses
+- Send sensor data to even-realities g1 smart glasses
 
     - Supports Bosch BME280 for air temperature, relative humidity, air pressure
 
     - Supports Sensirion SCD30 for CO2 concentration in ppm (it also has temperature and humidity data, but not recommended due to accuracy)
 
-- TODO: Add evaluation of thermal comfort, indoor air quality
+- TODO: Add evaluation of indoor air quality
+
+- TODO: Add daily clothing suggestions based on thermal comfort model
+
 
 ## How it works
 
