@@ -4,7 +4,7 @@ Here are some simple prototypes I have previously built for monitoring Indoor En
 
 ## CO2 box with E-Ink display (vertical)
 
--> [co2_box_epaper_vertical](/co2_box_epaper_vertical)
+-> [co2_box_epaper_vertical](./co2_box_epaper_vertical)
 
 - Microcontroller: Espressif ESP-32 DevKitC (WROOM-32D/E) (10~15€)
 
@@ -76,7 +76,7 @@ If you have a reference device for calibration, you could apply [One Point Offse
 
 ## CO2 box without display
 
--> [co2_box_no_display](/co2_box_no_display)
+-> [co2_box_no_display](./co2_box_no_display)
 
 - Microcontroller: Espressif ESP-32 DevKitC (WROOM-32D/E) (10~15€)
 
