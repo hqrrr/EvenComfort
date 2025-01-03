@@ -1,5 +1,6 @@
 from serial_reader import microcontroller
 from thermal_comfort import thermal_comfort_pmvppd, thermal_comfort_adaptive
+from air_quality import iaq_co2
 import asyncio
 import logging
 from even_glasses.bluetooth_manager import GlassesManager
@@ -14,6 +15,114 @@ sensors = ["BEM280", "SCD30"]
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# some dummy data
+temperature = -1
+humidity = 99
+pressure = 99
+CO2 = 99
+
+async def send_loop(manager):
+    global temperature
+    global humidity
+    global pressure
+    global CO2
+    # init microcontroller
+    mc = microcontroller(
+        serial_port=serial_port,
+        baud_rate=baud_rate,
+        sensors=sensors,
+    )
+    while True:
+
+        sensor_data = mc.get_data()
+        if sensor_data:
+            for i, data in enumerate(sensor_data["Data"]):
+                # Bosch BME280
+                if data["Sensor"] == "BME280":
+                    temperature = sensor_data["Data"][i]["Value"]["Temperature"]
+                    print(f"Temperature: {temperature} degC")
+                    humidity = sensor_data["Data"][i]["Value"]["Humidity"]
+                    print(f"Humidity: {humidity} %")
+                    pressure = sensor_data["Data"][i]["Value"]["Pressure"]
+                    print(f"Air pressure: {pressure} hPa")
+
+                # Sensirion SCD30
+                if data["Sensor"] == "SCD30":
+                    CO2 = sensor_data["Data"][i]["Value"]["CO2"]
+                    print(f"CO2: {CO2} ppm")
+
+                else:
+                    logger.error("Expected sensor not found in unpacked data")
+
+
+            # 1) thermal comfort (Fanger's PMV/PPD model)
+            pmvppd = thermal_comfort_pmvppd(tdb=temperature, rh=humidity)
+            ## Predicted Mean Vote from –3 to +3 corresponding to the categories: cold, cool, slightly cool, neutral, slightly warm, warm, and hot.
+            pmv = pmvppd["pmv"]
+            print(f"PMV: {pmv} [-3 ~ +3]")
+            ## Predicted Percentage of Dissatisfied (PPD) occupants in %
+            ppd = pmvppd["ppd"]
+            print(f"PMV: {ppd} [%]")
+            ## Predicted clothing insulation value in clo
+            clo_predicted = pmvppd["clo"]
+            print(f"Predicted clothing: {clo_predicted} [clo]")
+
+            # 2) thermal comfort (adaptive model)
+            adaptive_results = thermal_comfort_adaptive(tdb=temperature)
+            print("Adaptive thermal comfort results: ", adaptive_results)
+            t_comfort_acceptable = adaptive_results[0]
+            t_comfort_cat_i_low = adaptive_results[1]
+            t_comfort = adaptive_results[2]
+            t_comfort_cat_i_up = adaptive_results[3]
+
+            # TODO: Translate the clo value into common and understandable clothing combinations.
+
+            # Indoor Air Quality
+            # change the standard if you prefer to use the standards or laws of another region
+            # By default it uses European standard EN 16798-1:2019
+            iaq_results = iaq_co2(CO2, standard="EN")
+            print("IAQ results: ", iaq_results)
+
+            if iaq_results["standard"] in ["LEHB", "SS", "DOSH"]:
+                iaq = "Acceptable" if iaq_results["indices"][0] == 1 else "Unacceptable"
+            elif iaq_results["standard"] == "HK":
+                if iaq_results["indices"][0] == 1:
+                    iaq = "Excellent"
+                elif iaq_results["indices"][0] == 2:
+                    iaq = "Good"
+                else:
+                    iaq = "Unacceptable"
+            elif iaq_results["standard"] == "UBA":
+                if iaq_results["indices"][0] == 1:
+                    iaq = "Safe"
+                elif iaq_results["indices"][0] == 2:
+                    iaq = "Conspicuous"
+                else:
+                    iaq = "Unacceptable"
+            else:
+                # default: EN standard
+                if iaq_results["indices"][0] == 1:
+                    iaq = "Excellent"
+                elif iaq_results["indices"][0] == 2:
+                    iaq = "Good"
+                elif iaq_results["indices"][0] == 3:
+                    iaq = "Moderate"
+                else:
+                    iaq = "Bad"
+
+            # TODO: Add support for other IEQ domains like noise, lighting, VOC etc.
+
+            await send_text(
+                manager=manager,
+                text_message=f"Temperature: {temperature:.1f} °C | Humidity: {humidity:.0f} %\n"
+                             f"CO2: {CO2:.0f} ppm | Air Quality: {iaq}\n"
+                             f"PMV: {pmv:.2f}     | PPD: {ppd:.1f} %\n"
+                             f"Clothing Predicted: {clo_predicted:.2f} clo\n"
+                             f"Adaptive Comfort Temperature: {t_comfort:.1f} °C"
+            )
+
+        else:
+            pass
 
 async def main():
     # init even g1 glasses
@@ -22,68 +131,8 @@ async def main():
     await send_text(manager=manager, text_message="Hello, World!")
 
     if glasses_connected:
-        # init microcontroller
-        mc = microcontroller(
-            serial_port=serial_port,
-            baud_rate=baud_rate,
-            sensors=sensors,
-        )
         try:
-            while True:
-                sensor_data = mc.get_data()
-                if sensor_data:
-                    for i, data in enumerate(sensor_data["Data"]):
-                        # Bosch BME280
-                        if data["Sensor"] == "BME280":
-                            temperature = sensor_data["Data"][i]["Value"]["Temperature"]
-                            logger.info(f"Temperature: {temperature} degC")
-                            humidity = sensor_data["Data"][i]["Value"]["Humidity"]
-                            logger.info(f"Humidity: {humidity} %")
-                            pressure = sensor_data["Data"][i]["Value"]["Pressure"]
-                            logger.info(f"Air pressure: {pressure} hPa")
-
-                        # Sensirion SCD30
-                        if data["Sensor"] == "SCD30":
-                            CO2 = sensor_data["Data"][i]["Value"]["CO2"]
-                            logger.info(f"CO2: {CO2} ppm")
-
-                        else:
-                            logger.error("Expected sensor not found in unpacked data")
-                            # some dummy data
-                            temperature = 22
-                            humidity = 50
-                            pressure = 1000
-                            CO2 = 400
-
-                    # 1) thermal comfort (Fanger's PMV/PPD model)
-                    pmvppd = thermal_comfort_pmvppd(tdb=temperature, rh=50)
-                    ## Predicted Mean Vote from –3 to +3 corresponding to the categories: cold, cool, slightly cool, neutral, slightly warm, warm, and hot.
-                    pmv = pmvppd["pmv"]
-                    logger.info(f"PMV: {pmv} [-3 ~ +3]")
-                    ## Predicted Percentage of Dissatisfied (PPD) occupants in %
-                    ppd = pmvppd["ppd"]
-                    logger.info(f"PMV: {ppd} [%]")
-                    ## Predicted clothing insulation value in clo
-                    clo_predicted = pmvppd["clo"]
-                    logger.info(f"Predicted clothing: {clo_predicted} [clo]")
-
-                    # 2) thermal comfort (adaptive model)
-                    adaptive_results = thermal_comfort_adaptive(tdb=temperature)
-
-
-                    # TODO: Translate the clo value into common and understandable clothing combinations.
-
-                    # TODO: IAQ
-
-                    # TODO: Add support for other IEQ domains like noise, lighting, VOC etc.
-
-                    # TODO: send sensor data to even g1
-                    # await send_text(manager=manager, text_message="Hello World!")
-
-                else:
-                    logger.error("No sensor data!")
-                    await send_text(manager=manager, text_message="No sensor data!")
-
+            await send_loop(manager)
 
         except KeyboardInterrupt:
             logger.info("Interrupted by user.")

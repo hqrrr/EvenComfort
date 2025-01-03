@@ -26,10 +26,15 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
     - Thermal comfort evaluation based on Fanger's PMV/PPD model (ISO 7730) & adaptive model (EN 16798-1:2019)
 
-- TODO: Add evaluation of indoor air quality
+    - Indoor air quality based on CO2 concentration indoors and different standards & laws
 
-- TODO: Add daily clothing suggestions based on thermal comfort model
+- TODO: Add daily clothing suggestions based on thermal comfort model ("translate" the clo value into common and understandable clothing combinations.)
 
+- TODO: Add support for other IEQ domains like noise, lighting, VOC-based IAQ etc.
+
+## Showcase
+
+![Workflow.png](./pics/Showcase.png)
 
 ## How it works
 
@@ -51,6 +56,8 @@ Technically, the microcontroller ESP32 I use also supports BLE connection, which
 
 Feel free to copy my code into your applications! Further development plans are to support some other devices I previously developed about Indoor Environmental Quality (they have more types of sensors, such as noise, light, VOC, etc.).
 
+I'm not a full-time professional software developer, so please don't judge my shitty code. I also have no experience in developing Android or iOS apps :(
+
 If you have other ideas, feel free to submit an issue labelled `enhancement`.
 
 ### Some cool repos for Even Realities G1 I found earlier:
@@ -66,5 +73,3 @@ If you have other ideas, feel free to submit an issue labelled `enhancement`.
 - [@emingenc: g1_flutter_blue_plus](https://github.com/emingenc/g1_flutter_blue_plus): Another repo from @emingenc for Dart implementation.
 
 - [@NyasakiAT: G1-Navigate](https://github.com/NyasakiAT/G1-Navigate): Further development of the Dart implementation and BMP composing code
-
-If I find another repo, I will add it to this list. If you have a cool application, feel free to submit an issue labelled `enhancement`, or better yet, post it directly to the Even Realities official Discord group.
