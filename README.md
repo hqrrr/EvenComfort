@@ -22,7 +22,11 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
     - Supports Sensirion SCD30 for CO2 concentration in ppm (it also has temperature and humidity data, but not recommended due to accuracy)
 
-- Thermal comfort evaluation based on Fanger's PMV/PPD model (ISO 7730) & adaptive model (EN 16798-1:2019)
+- Indoor Environmental Quality evaluation
+
+    - Thermal comfort evaluation based on Fanger's PMV/PPD model (ISO 7730) & adaptive model (EN 16798-1:2019)
+
+    Notes: If you are curious about the principles behind these models, I have previously written an wiki article about the basis of IEQ, which you can read [here](https://rw.e3d.rwth-aachen.de/en/wiki/about-the-basis-of-ieq-2/) (I know it may be a bit long).
 
 - TODO: Add evaluation of indoor air quality
 
