@@ -34,7 +34,7 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
 ## Showcase
 
-![Workflow.png](./pics/Showcase.png)
+![Showcase.png](./pics/Showcase.png)
 
 ## How it works
 
