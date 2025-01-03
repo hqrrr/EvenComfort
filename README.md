@@ -6,7 +6,7 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
 1. Configure the microcontroller (serial port / baud rate / number of sensor) in `even_g1.py`
 
-    - You can find the demo Arduino code and the quick build guides [here](/microcontroller): 
+    - You can find the demo Arduino code and the quick build guides [here](./microcontroller): 
 
 2. Configure `latitude`, `longitude` and `timezone` in `get_weather.py`
 
