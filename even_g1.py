@@ -23,6 +23,7 @@ humidity = 99
 pressure = 99
 CO2 = 99
 
+
 async def send_sensordata(manager):
     global temperature
     global humidity
@@ -35,7 +36,6 @@ async def send_sensordata(manager):
         sensors=sensors,
     )
     while True:
-
         sensor_data = mc.get_data()
         if sensor_data:
             for i, data in enumerate(sensor_data["Data"]):
@@ -55,7 +55,6 @@ async def send_sensordata(manager):
 
                 else:
                     logger.error("Expected sensor not found in unpacked data")
-
 
             # 1) thermal comfort (Fanger's PMV/PPD model)
             pmvppd = thermal_comfort_pmvppd(tdb=temperature, rh=humidity)
@@ -117,10 +116,10 @@ async def send_sensordata(manager):
             await send_text(
                 manager=manager,
                 text_message=f"Temperature: {temperature:.1f} °C | Humidity: {humidity:.0f} %\n"
-                             f"CO2: {CO2:.0f} ppm | Air Quality: {iaq}\n"
-                             f"PMV: {pmv:.2f}     | PPD: {ppd:.1f} %\n"
-                             f"Clothing Predicted: {clo_predicted:.2f} clo\n"
-                             f"Adaptive Comfort Temperature: {t_comfort:.1f} °C"
+                f"CO2: {CO2:.0f} ppm | Air Quality: {iaq}\n"
+                f"PMV: {pmv:.2f}     | PPD: {ppd:.1f} %\n"
+                f"Clothing Predicted: {clo_predicted:.2f} clo\n"
+                f"Adaptive Comfort Temperature: {t_comfort:.1f} °C",
             )
 
         else:
@@ -129,16 +128,20 @@ async def send_sensordata(manager):
 
 async def send_suggestion(manager):
     # get suggested clothing ensembles indoors, extra clothing outdoors, today's average outdoor temperature and humidity
-    clothing_indoor, clothing_outdoor, tout_avg_today, hout_avg_today = clothing_suggestion(type="A")
+    (
+        clothing_indoor,
+        clothing_outdoor,
+        tout_avg_today,
+        hout_avg_today,
+    ) = clothing_suggestion(type="A")
 
     await send_text(
         manager=manager,
         text_message=f"Today's average outdoor temperature: {tout_avg_today:.1f} °C\n"
-                     f"Today's average outdoor humidity: {hout_avg_today:.1f} %\n"
-                     f"Suggested indoor outfits: {clothing_indoor}\n"
-                     f"Suggested outdoor outfits: {clothing_outdoor}"
+        f"Today's average outdoor humidity: {hout_avg_today:.1f} %\n"
+        f"Suggested indoor outfits: {clothing_indoor}\n"
+        f"Suggested outdoor outfits: {clothing_outdoor}",
     )
-
 
 
 async def main():
@@ -149,8 +152,8 @@ async def main():
 
     if glasses_connected:
         try:
-            # await send_sensordata(manager)    # send sensor data continuously when updated
             await send_suggestion(manager)  # send clothing suggestions once, no microcontroller required
+            # await send_sensordata(manager)  # send sensor data continuously when updated, comment this line if you don't have sensor data
         except KeyboardInterrupt:
             logger.info("Interrupted by user.")
 

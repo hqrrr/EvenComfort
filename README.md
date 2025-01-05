@@ -13,7 +13,7 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
 3. Run `even_g1.py`
 
-    - If you don't have sensor data, you could still use daily clothing suggestion function, see line 152-153.
+    - If you don't have sensor data, you could still use daily clothing suggestion function, see line 155-156.
 
 ## Features
 
