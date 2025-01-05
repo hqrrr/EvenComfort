@@ -1,10 +1,12 @@
 from serial_reader import microcontroller
 from thermal_comfort import thermal_comfort_pmvppd, thermal_comfort_adaptive
 from air_quality import iaq_co2
+from clothing_suggestion import clothing_suggestion
 import asyncio
 import logging
 from even_glasses.bluetooth_manager import GlassesManager
 from even_glasses.commands import send_text
+import time
 
 # Hardware configuration
 serial_port = "COM11"
@@ -21,7 +23,7 @@ humidity = 99
 pressure = 99
 CO2 = 99
 
-async def send_loop(manager):
+async def send_sensordata(manager):
     global temperature
     global humidity
     global pressure
@@ -124,6 +126,21 @@ async def send_loop(manager):
         else:
             pass
 
+
+async def send_suggestion(manager):
+    # get suggested clothing ensembles indoors, extra clothing outdoors, today's average outdoor temperature and humidity
+    clothing_indoor, clothing_outdoor, tout_avg_today, hout_avg_today = clothing_suggestion(type="A")
+
+    await send_text(
+        manager=manager,
+        text_message=f"Today's average outdoor temperature: {tout_avg_today:.1f} °C\n"
+                     f"Today's average outdoor humidity: {hout_avg_today:.1f} %\n"
+                     f"Suggested indoor outfits: {clothing_indoor}\n"
+                     f"Suggested outdoor outfits: {clothing_outdoor}"
+    )
+
+
+
 async def main():
     # init even g1 glasses
     manager = GlassesManager(left_address=None, right_address=None)
@@ -132,8 +149,8 @@ async def main():
 
     if glasses_connected:
         try:
-            await send_loop(manager)
-
+            # await send_sensordata(manager)    # send sensor data continuously when updated
+            await send_suggestion(manager)  # send clothing suggestions once, no microcontroller required
         except KeyboardInterrupt:
             logger.info("Interrupted by user.")
 

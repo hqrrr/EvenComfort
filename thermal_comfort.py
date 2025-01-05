@@ -16,14 +16,18 @@ tout_6am = None
 
 def clo_prediction() -> float:
     """
-    Predict clothing today based on outdoor air temperature at 06:00 a.m.
+    Predict clothing today (indoors) based on outdoor air temperature at 06:00 a.m.
     No need to manually enter your current clothing insulation value.
     The outdoor air temperature is updated only once a day.
+
+    Notes
+    -----
+    May not be accurate for extreme temperature ranges and naturally ventilated buildings.
 
     Returns
     -------
     clo_prediction: float
-        predicted clothing insulation value [clo]
+        predicted clothing insulation value [clo] indoors
     """
     global updated
     global last_update_date
@@ -88,7 +92,7 @@ def thermal_comfort_pmvppd(tdb, rh, tr=None, v=0, met=1.2) -> dict:
     # calculate relative air speed
     v_r = v_relative(v=v, met=met)
 
-    # predict clothing based on outdoor temperature at 6 a.m.
+    # predict clothing indoors based on outdoor temperature at 6 a.m.
     clo = clo_prediction()
     # calculate dynamic clothing
     clo_d = clo_dynamic(clo=clo, met=met)
@@ -149,7 +153,3 @@ def thermal_comfort_adaptive(tdb, tr=None, v=0) -> list:
 
     return [t_comfort_acceptable, t_comfort_cat_i_low, t_comfort, t_comfort_cat_i_up]
 
-
-if __name__ == "__main__":
-    a = thermal_comfort_adaptive(18)
-    print(a)

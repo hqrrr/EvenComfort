@@ -7,10 +7,13 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 1. Configure the microcontroller (serial port / baud rate / sensors) in `even_g1.py`
 
     - You can find the demo Arduino code and the quick build guides [here](./microcontroller): 
+    - If you only need the clothing suggestion based on thermal comfort model, you can skip this step
 
 2. Configure `latitude`, `longitude` and `timezone` in `get_weather.py`
 
 3. Run `even_g1.py`
+
+    - If you don't have sensor data, you could still use daily clothing suggestion function, see line 152-153.
 
 ## Features
 
@@ -28,13 +31,21 @@ Experimental script to display Indoor Environmental Quality sensor data on Even 
 
     - Indoor air quality based on CO2 concentration indoors and different standards & laws
 
-- TODO: Add daily clothing suggestions based on thermal comfort model ("translate" the clo value into common and understandable clothing combinations.)
+- **NEW: Daily clothing suggestions based on ASHRAE 55 & ISO 9920**
+
+    - No microcontroller or sensor data required, only needs weather API
 
 - TODO: Add support for other IEQ domains like noise, lighting, VOC-based IAQ etc.
 
 ## Showcase
 
+Sending sensor data to G1
+
 ![Showcase.png](./pics/Showcase.png)
+
+Giving clothing suggestions indoors / outdoors
+
+![Showcase2.png](./pics/Showcase2.png)
 
 ## How it works
 

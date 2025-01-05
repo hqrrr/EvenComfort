@@ -47,11 +47,18 @@ params_past7days = {
     "past_days": 7,
     "forecast_days": 1,
 }
+params_today = {
+    "latitude": latitude,
+    "longitude": longitude,
+    "hourly": ["temperature_2m", "relative_humidity_2m"],
+    "timezone": timezone,
+    "forecast_days": 1,
+}
 
 
 def t_outdoor_6am() -> float:
     """
-    Get Local outdoor air temperature [°C] at 6 a.m. from weather API (for daily clothing prediction)
+    Get local outdoor air temperature [°C] at 6 a.m. from weather API (for daily clothing prediction)
 
     Returns
     -------
@@ -146,3 +153,52 @@ def t_outdoor_avg_past7days() -> list:
 
     return tout_avg_past7days_ls
 
+def th_outdoor_avg_today() -> list:
+    """
+    Get today's local average outdoor air temperature [°C] from weather API (for daily clothing suggestions)
+
+    Returns
+    -------
+    tout_avg: float
+        Today's local average outdoor air temperature [°C]
+    hout_avg: float
+        Today's local average outdoor relative humidty [%]
+    """
+    responses = openmeteo.weather_api(url, params=params_today)
+
+    # Process first location. Add a for-loop for multiple locations or weather models
+    response = responses[0]
+    logger.info(f"Coordinates {response.Latitude()}°N {response.Longitude()}°E")
+    logger.info(f"Timezone {response.Timezone()} {response.TimezoneAbbreviation()}")
+
+    # Process hourly data. The order of variables needs to be the same as requested.
+    hourly = response.Hourly()
+    hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
+    hourly_relative_humidity_2m = hourly.Variables(1).ValuesAsNumpy()
+
+    hourly_data = {
+        "date": pd.date_range(
+            start=pd.to_datetime(hourly.Time(), unit="s", utc=True),
+            end=pd.to_datetime(hourly.TimeEnd(), unit="s", utc=True),
+            freq=pd.Timedelta(seconds=hourly.Interval()),
+            inclusive="left",
+        )
+    }
+
+    hourly_data["temperature_2m"] = hourly_temperature_2m
+    hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
+
+    hourly_dataframe = pd.DataFrame(data=hourly_data)
+
+    # create mask for today
+    date_now = datetime.now()
+    mask = (hourly_dataframe["date"] >= f"{date_now.year}-{date_now.month}-{date_now.day}")
+    thout_today = hourly_dataframe.loc[mask]
+
+    # set index
+    thout_avg_today = thout_today.set_index("date")
+    # calculate today's average temperature & humidity
+    tout_avg_today = thout_avg_today.resample("D").mean().temperature_2m.item()
+    hout_avg_today = thout_avg_today.resample("D").mean().relative_humidity_2m.item()
+
+    return [tout_avg_today, hout_avg_today]
