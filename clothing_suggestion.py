@@ -80,7 +80,7 @@ def clothing_suggestion(type="A") -> list:
 
     # calculate extra clo needed to reach abs(PMV) <= 0.2 (category I in EN 16798-1)
     clo_extra = 0
-    while abs(pmv_outdoor["pmv"]) > 0.2:
+    while pmv_outdoor["pmv"] < -0.2:
         clo_extra += 0.05
         clo = closest_clo_indoor + clo_extra
         # assume radiant temperature is equal to air temperature. The influence of sunlight is not taken into account.
@@ -96,7 +96,3 @@ def clothing_suggestion(type="A") -> list:
     print("closest_clo_outdoor: ", closest_clo_outdoor)
 
     return [closest_ensembles_indoor, closest_garment_outdoor, tout_avg_today, hout_avg_today]
-
-
-if __name__ == "__main__":
-    clothing_suggestion()
