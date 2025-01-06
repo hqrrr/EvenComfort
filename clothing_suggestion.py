@@ -78,7 +78,7 @@ def clothing_suggestion(type="A") -> list:
     pmv_outdoor = pmv_ppd(tdb=tout_avg_today, tr=tout_avg_today, vr=0, rh=hout_avg_today, met=met, clo=closest_clo_indoor, limit_inputs=False)
     print(pmv_outdoor)
 
-    # calculate extra clo needed to reach abs(PMV) <= 0.2 (category I in EN 16798-1)
+    # calculate extra clo needed in winter to reach PMV >= -0.2 (category I in EN 16798-1)
     clo_extra = 0
     while pmv_outdoor["pmv"] < -0.2:
         clo_extra += 0.05
