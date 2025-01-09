@@ -41,10 +41,10 @@ clo_outdoor_typical = {
     "Vest": 0.17,
     "Light jacket": 0.249,
     "Jacket": 0.349,
-    "Heavy jacket": 0.4,
-    "Down jacket": 0.55,
-    "Parka": 0.7,
-    "Heavy Parka": 0.8,
+    "Heavy jacket": 0.399,
+    "Down jacket": 0.549,
+    "Parka": 0.699,
+    "Heavy Parka": 0.799,
     "Heavy Parka, thick socks and gloves": 1.0,
 }
 
