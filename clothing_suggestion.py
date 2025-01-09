@@ -40,7 +40,7 @@ clo_outdoor_typical = {
     "No additional jacket needed": 0,
     "Vest": 0.17,
     "Light jacket": 0.249,
-    "Jacket": 0.351,
+    "Jacket": 0.349,
     "Heavy jacket": 0.4,
     "Down jacket": 0.55,
     "Parka": 0.7,
